@@ -1,22 +1,260 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>V+M</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;min-height:100vh;color:#fff;background:#222;overflow:hidden}.bg{position:fixed;inset:0;background-size:cover;background-position:center;transition:background-image .7s ease}.bg:after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.64),rgba(0,0,0,.25))}.card{position:relative;z-index:2;width:min(92%,620px);min-height:430px;margin:auto;top:50%;transform:translateY(-50%);padding:38px 30px;border-radius:26px;background:rgba(15,15,15,.58);backdrop-filter:blur(10px);box-shadow:0 15px 45px rgba(0,0,0,.35);display:flex;flex-direction:column;justify-content:center}.small{font-size:13px;letter-spacing:2px;text-transform:uppercase;opacity:.8;text-align:center}h1{font-size:34px;text-align:center;margin:15px 0 12px}.subtitle{text-align:center;line-height:1.6;opacity:.9;margin-bottom:25px}.progress{height:5px;background:rgba(255,255,255,.22);border-radius:10px;margin-bottom:28px;overflow:hidden}.progress span{display:block;height:100%;width:0;background:#fff;border-radius:10px;transition:width .4s}h2{text-align:center;font-size:25px;line-height:1.3;margin-bottom:25px}.options{display:grid;gap:12px}.option{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;padding:16px 18px;border-radius:14px;font-size:16px;cursor:pointer;text-align:left;transition:.2s}.option:hover{background:rgba(255,255,255,.25);transform:translateY(-2px)}.result{text-align:center;line-height:1.65}.result h2{font-size:30px;margin-bottom:16px}.result p{font-size:17px;margin-bottom:22px}.reveal{margin-top:18px;padding:15px;border-radius:14px;background:rgba(255,255,255,.12);font-size:15px}.hidden{display:none}@media(max-width:500px){.card{min-height:470px;padding:28px 20px}h1{font-size:28px}h2{font-size:22px}}
-</style></head>
-<body><div class="bg" id="bg"></div><main class="card">
-<section id="intro"><div class="small">Una pequeña elección</div><h1>¿Qué tipo de tarde te representa?</h1><p class="subtitle">Son solo unas preguntas. No hay respuestas correctas. Elige lo primero que te nazca.</p><button class="option" onclick="start()">Comenzar</button></section>
-<section id="quiz" class="hidden"><div class="progress"><span id="bar"></span></div><div class="small" id="counter"></div><h2 id="question"></h2><div class="options"><button class="option" id="a" onclick="answer('A')"></button><button class="option" id="b" onclick="answer('B')"></button></div></section>
-<section id="result" class="result hidden"></section></main>
-<script>
-const questions=[
-{q:'Si tienes una tarde libre, ¿qué te provoca más?',a:'Salir a descubrir algo diferente',b:'Escaparme un rato de la rutina',bg:'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1600&q=85'},
-{q:'¿Qué paisaje te llamaría más la atención?',a:'Algo que parezca salido de otro lugar',b:'Un lugar verde y tranquilo',bg:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1600&q=85'},
-{q:'Para una caminata, ¿qué prefieres?',a:'Un poco de subida y una buena vista al final',b:'Un camino agradable para caminar y conversar',bg:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=85'},
-{q:'¿Qué foto te gustaría llevarte de recuerdo?',a:'Una con un paisaje amplio y llamativo',b:'Una rodeada de naturaleza',bg:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&q=85'},
-{q:'¿Qué plan suena más a ti?',a:'Caminar, explorar y sorprenderme con el lugar',b:'Caminar sin apuro y disfrutar de la tranquilidad',bg:'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1600&q=85'},
-{q:'Y si el sol está empezando a bajar...',a:'Quiero estar en un punto con una buena vista',b:'Quiero estar en un lugar bonito y relajante',bg:'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1600&q=85'}];
-let current=0,scoreA=0,scoreB=0;function setBg(u){document.getElementById('bg').style.backgroundImage=`url("${u}")`}function start(){document.getElementById('intro').classList.add('hidden');document.getElementById('quiz').classList.remove('hidden');showQuestion()}function showQuestion(){let x=questions[current];document.getElementById('counter').textContent=`Pregunta ${current+1} de ${questions.length}`;document.getElementById('question').textContent=x.q;document.getElementById('a').textContent=x.a;document.getElementById('b').textContent=x.b;document.getElementById('bar').style.width=(current/questions.length*100)+'%';setBg(x.bg)}function answer(c){c==='A'?scoreA++:scoreB++;current++;if(current<questions.length)showQuestion();else showResult()}function showResult(){document.getElementById('bar').style.width='100%';document.getElementById('quiz').classList.add('hidden');document.getElementById('result').classList.remove('hidden');let html;if(scoreA>scoreB)html='<div class="small">Resultado</div><h2>Te va más una tarde de exploración</h2><p>Por tus respuestas, se nota que te gusta curiosear un poco, moverte y terminar en un lugar especial.</p><div class="reveal">Ya me hago una buena idea... Mándame tu resultado, Valeria, y te mando un besito.</div>';else if(scoreB>scoreA)html='<div class="small">Resultado</div><h2>Te va más una tarde tranquila</h2><p>Por tus respuestas, se nota que valoras la calma, un ambiente bonito y conversar sin prisas.</p><div class="reveal">Ya me hago una buena idea... Mándame tu resultado, Valeria, y te mando un besito.</div>';else html='<div class="small">Resultado</div><h2>Empate perfecto</h2><p>Al parecer te acomoda de todo un poco: algo de movimiento y también su rato para relajarse.</p><div class="reveal">Cualquiera de las dos direcciones nos viene bien. Mándame tu resultado, Valeria, y te mando un besito.</div>';document.getElementById('result').innerHTML=html}
-</script></body></html>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V+M</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      min-height: 100vh;
+      color: #fff;
+      background: #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+    
+    .bg {
+      position: fixed;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.7s ease;
+      z-index: 1;
+    }
+    
+    .bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.3));
+    }
+    
+    .card {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 600px);
+      min-height: 420px;
+      padding: 35px 28px;
+      border-radius: 24px;
+      background: rgba(15, 15, 15, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    
+    section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .small {
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 8px;
+    }
+    
+    h1 {
+      font-size: 32px;
+      margin: 10px 0 14px;
+      line-height: 1.25;
+    }
+    
+    .subtitle {
+      line-height: 1.6;
+      opacity: 0.9;
+      margin-bottom: 25px;
+      max-width: 480px;
+      font-size: 15px;
+    }
+    
+    .progress {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+    
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: #fff;
+      border-radius: 10px;
+      transition: width 0.4s ease;
+    }
+    
+    h2 {
+      font-size: 23px;
+      line-height: 1.35;
+      margin-bottom: 24px;
+      max-width: 500px;
+    }
+    
+    .options {
+      width: 100%;
+      display: grid;
+      gap: 12px;
+    }
+    
+    .option {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      padding: 16px 20px;
+      border-radius: 14px;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    
+    .option:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+    
+    .result {
+      line-height: 1.65;
+    }
+    
+    .result h2 {
+      font-size: 28px;
+      margin-bottom: 14px;
+    }
+    
+    .result p {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .reveal {
+      margin-top: 15px;
+      padding: 16px 20px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.15);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    @media (max-width: 500px) {
+      .card {
+        padding: 28px 18px;
+        min-height: 440px;
+      }
+      h1 { font-size: 26px; }
+      h2 { font-size: 20px; }
+      .option { font-size: 15px; padding: 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg" id="bg"></div>
+
+  <main class="card">
+    <!-- Intro -->
+    <section id="intro">
+      <div class="small">Una pequeña elección</div>
+      <h1>¿Qué tipo de tarde te representa?</h1>
+      <p class="subtitle">Son solo unas preguntas. No hay respuestas correctas. Elige lo primero que te nazca.</p>
+      <button class="option" onclick="start()">Comenzar</button>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz" class="hidden">
+      <div class="progress"><span id="bar"></span></div>
+      <div class="small" id="counter"></div>
+      <h2 id="question"></h2>
+      <div class="options">
+        <button class="option" id="a" onclick="answer('A')"></button>
+        <button class="option" id="b" onclick="answer('B')"></button>
+      </div>
+    </section>
+
+    <!-- Result -->
+    <section id="result" class="result hidden"></section>
+  </main>
+
+  <script>
+    const questions = [
+      { q: 'Si tienes una tarde libre, ¿qué te provoca más?', a: 'Salir a descubrir algo diferente', b: 'Escaparme un rato de la rutina', bg: 'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1600&q=85' },
+      { q: '¿Qué paisaje te llamaría más la atención?', a: 'Algo que parezca salido de otro lugar', b: 'Un lugar verde y tranquilo', bg: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1600&q=85' },
+      { q: 'Para una caminata, ¿qué prefieres?', a: 'Un poco de subida y una buena vista al final', b: 'Un camino agradable para caminar y conversar', bg: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=85' },
+      { q: '¿Qué foto te gustaría llevarte de recuerdo?', a: 'Una con un paisaje amplio y llamativo', b: 'Una rodeada de naturaleza', bg: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&q=85' },
+      { q: '¿Qué plan suena más a ti?', a: 'Caminar, explorar y sorprenderme con el lugar', b: 'Caminar sin apuro y disfrutar de la tranquilidad', bg: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1600&q=85' },
+      { q: 'Y si el sol está empezando a bajar...', a: 'Quiero estar en un punto con una buena vista', b: 'Quiero estar en un lugar bonito y relajante', bg: 'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1600&q=85' }
+    ];
+
+    let current = 0, scoreA = 0, scoreB = 0;
+
+    function setBg(u) {
+      document.getElementById('bg').style.backgroundImage = `url("${u}")`;
+    }
+
+    function start() {
+      document.getElementById('intro').classList.add('hidden');
+      document.getElementById('quiz').classList.remove('hidden');
+      showQuestion();
+    }
+
+    function showQuestion() {
+      let x = questions[current];
+      document.getElementById('counter').textContent = `Pregunta ${current + 1} de ${questions.length}`;
+      document.getElementById('question').textContent = x.q;
+      document.getElementById('a').textContent = x.a;
+      document.getElementById('b').textContent = x.b;
+      document.getElementById('bar').style.width = (current / questions.length * 100) + '%';
+      setBg(x.bg);
+    }
+
+    function answer(c) {
+      if (c === 'A') scoreA++;
+      else scoreB++;
+      current++;
+      if (current < questions.length) showQuestion();
+      else showResult();
+    }
+
+    function showResult() {
+      document.getElementById('bar').style.width = '100%';
+      document.getElementById('quiz').classList.add('hidden');
+      document.getElementById('result').classList.remove('hidden');
+      let html;
+      if (scoreA > scoreB) {
+        html = '<div class="small">Resultado</div><h2>Te va más una tarde de exploración</h2><p>Por tus respuestas, se nota que te gusta curiosear un poco, moverte y terminar en un lugar especial.</p><div class="reveal">Ya me hago una buena idea... Mándame tu resultado, Valeria, y te mando un besito.</div>';
+      } else if (scoreB > scoreA) {
+        html = '<div class="small">Resultado</div><h2>Te va más una tarde tranquila</h2><p>Por tus respuestas, se nota que valoras la calma, un ambiente bonito y conversar sin prisas.</p><div class="reveal">Ya me hago una buena idea... Mándame tu resultado, Valeria, y te mando un besito.</div>';
+      } else {
+        html = '<div class="small">Resultado</div><h2>Empate perfecto</h2><p>Al parecer te acomoda de todo un poco: algo de movimiento y también su rato para relajarse.</p><div class="reveal">Cualquiera de las dos direcciones nos viene bien. Mándame tu resultado, Valeria, y te mando un besito.</div>';
+      }
+      document.getElementById('result').innerHTML = html;
+    }
+  </script>
+</body>
+</html>
